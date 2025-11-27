@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account - SariSariGo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-inter">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-8">
+                    <a href="vendor-orders.html" class="flex items-center">
+                        <img src="products/logo.png" alt="SariSariGo" class="h-8 w-auto mr-3 object-contain" onerror="this.style.display='none'">
+                        <span class="text-2xl font-bold text-green-600">SariSariGo</span>
+                    </a>
+                    <nav class="hidden md:flex items-center space-x-8" id="vendor-nav">
+                        <a href="vendor-orders.html" class="text-gray-600 hover:text-green-600 transition font-semibold">
+                            <i class="fas fa-boxes mr-2"></i>Orders
+                        </a>
+                        <a href="vendor-products.html" class="text-gray-600 hover:text-green-600 transition font-semibold">
+                            <i class="fas fa-cube mr-2"></i>Products
+                        </a>
+                        <a href="vendor-account.html" class="text-gray-600 hover:text-green-600 transition font-semibold text-green-600 border-b-2 border-green-600">
+                            <i class="fas fa-user-cog mr-2"></i>Account
+                        </a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-4" id="auth-links">
+                        <!-- Auth links will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Page Title -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Account Settings</h1>
+            <p class="text-gray-600">Manage your vendor profile and account preferences</p>
+        </div>
+
+        <!-- Section Navigation -->
+        <div class="mb-6 border-b border-gray-200">
+            <nav class="flex space-x-2 flex-wrap" id="account-section-nav">
+                <button id="section-profile" class="px-4 py-3 rounded-t-lg bg-green-100 text-green-700 font-semibold border-l-4 border-green-500 hover:bg-green-200 transition" data-section="profile">
+                    <i class="fas fa-user mr-2"></i>Profile
+                </button>
+                <button id="section-security" class="px-4 py-3 rounded-t-lg text-gray-600 hover:bg-gray-100 transition" data-section="security">
+                    <i class="fas fa-lock mr-2"></i>Security
+                </button>
+                <button id="section-billing" class="px-4 py-3 rounded-t-lg text-gray-600 hover:bg-gray-100 transition" data-section="billing">
+                    <i class="fas fa-credit-card mr-2"></i>Billing
+                </button>
+                <button id="section-notifications" class="px-4 py-3 rounded-t-lg text-gray-600 hover:bg-gray-100 transition" data-section="notifications">
+                    <i class="fas fa-bell mr-2"></i>Notifications
+                </button>
+            </nav>
+        </div>
+
+        <!-- Profile Section -->
+        <div id="section-profile-content" class="account-section">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Profile Card -->
+                <div class="glass-card rounded-2xl p-6 shadow-lg border border-white lg:col-span-1">
+                    <h3 class="text-xl font-semibold mb-4">Profile Picture</h3>
+                    <div class="flex flex-col items-center">
+                        <div id="profile-avatar" class="w-24 h-24 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-white text-4xl font-bold mb-4">
+                            <!-- Avatar will be populated by JS -->
+                        </div>
+                        <button id="upload-avatar-btn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition text-sm">
+                            <i class="fas fa-upload mr-2"></i>Upload Photo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Profile Information -->
+                <div class="glass-card rounded-2xl p-6 shadow-lg border border-white lg:col-span-2">
+                    <h3 class="text-xl font-semibold mb-4">Store Information</h3>
+                    <form id="profile-form" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                                <input type="text" id="profile-fullname" required class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <input type="email" id="profile-email" required class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                                <input type="tel" id="profile-phone" class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Store Name</label>
+                                <input type="text" id="profile-storename" class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                            <textarea id="profile-address" rows="3" class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">City</label>
+                                <input type="text" id="profile-city" class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Postal Code</label>
+                                <input type="text" id="profile-postal" class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                            </div>
+                        </div>
+
+                        <div class="flex space-x-4 pt-4">
+                            <button type="submit" class="flex-1 bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg transition-all flex items-center justify-center">
+                                <i class="fas fa-save mr-2"></i> Save Changes
+                            </button>
+                            <button type="button" id="cancel-profile-btn" class="flex-1 bg-gray-300 text-gray-700 font-bold py-3 px-6 rounded-xl hover:bg-gray-400 transition">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Section -->
+        <div id="section-security-content" class="account-section hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Change Password -->
+                <div class="glass-card rounded-2xl p-6 shadow-lg border border-white">
+                    <h3 class="text-xl font-semibold mb-4">Change Password</h3>
+                    <form id="password-form" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                            <input type="password" id="current-password" required class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                            <input type="password" id="new-password" required class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                            <input type="password" id="confirm-password" required class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                        </div>
+                        <button type="submit" class="w-full bg-green-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-green-600 transition">
+                            <i class="fas fa-key mr-2"></i> Update Password
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Two-Factor Authentication -->
+                <div class="glass-card rounded-2xl p-6 shadow-lg border border-white">
+                    <h3 class="text-xl font-semibold mb-4">Two-Factor Authentication</h3>
+                    <div class="space-y-4">
+                        <p class="text-gray-600 text-sm">Add an extra layer of security to your account.</p>
+                        <div id="2fa-status" class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800">
+                            <i class="fas fa-info-circle mr-2"></i>Two-Factor Authentication is currently <strong>Disabled</strong>
+                        </div>
+                        <button id="enable-2fa-btn" class="w-full bg-blue-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-blue-600 transition">
+                            <i class="fas fa-shield-alt mr-2"></i> Enable 2FA
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Active Sessions -->
+                <div class="glass-card rounded-2xl p-6 shadow-lg border border-white lg:col-span-2">
+                    <h3 class="text-xl font-semibold mb-4">Active Sessions</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-medium text-gray-800">Current Session</p>
+                                <p class="text-sm text-gray-500">Browser · Windows · <span id="current-session-time">Just now</span></p>
+                            </div>
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">Active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Billing Section -->
+        <div id="section-billing-content" class="account-section hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Billing Information -->
+                <div class="glass-card rounded-2xl p-6 shadow-lg border border-white">
+                    <h3 class="text-xl font-semibold mb-4">Billing Information</h3>
+                    <form id="billing-form" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                            <input type="text" id="billing-name" required class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <input type="email" id="billing-email" required class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                            <input type="text" id="billing-address" required class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">City</label>
+                                <input type="text" id="billing-city" required class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Postal Code</label>
+                                <input type="text" id="billing-postal" required class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full bg-green-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-green-600 transition">
+                            <i class="fas fa-save mr-2"></i> Save Billing Info
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Payment Methods -->
+                <div class="glass-card rounded-2xl p-6 shadow-lg border border-white">
+                    <h3 class="text-xl font-semibold mb-4">Payment Methods</h3>
+                    <div class="space-y-3 mb-4">
+                        <div id="payment-methods-list" class="space-y-3">
+                            <!-- Payment methods will be listed here -->
+                        </div>
+                    </div>
+                    <button id="add-payment-method-btn" class="w-full bg-blue-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-blue-600 transition">
+                        <i class="fas fa-plus mr-2"></i> Add Payment Method
+                    </button>
+                </div>
+
+                <!-- Subscription -->
+                <div class="glass-card rounded-2xl p-6 shadow-lg border border-white lg:col-span-2">
+                    <h3 class="text-xl font-semibold mb-4">Subscription Plan</h3>
+                    <div class="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="font-semibold text-lg text-gray-800">Free Plan</p>
+                                <p class="text-sm text-gray-600">Active · Started on Nov 27, 2025</p>
+                            </div>
+                            <button id="upgrade-plan-btn" class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition">
+                                Upgrade to Pro
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications Section -->
+        <div id="section-notifications-content" class="account-section hidden">
+            <div class="glass-card rounded-2xl p-6 shadow-lg border border-white max-w-2xl">
+                <h3 class="text-xl font-semibold mb-6">Notification Preferences</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                        <div>
+                            <p class="font-semibold text-gray-800">Order Notifications</p>
+                            <p class="text-sm text-gray-600">Get notified when you receive a new order</p>
+                        </div>
+                        <input type="checkbox" id="notif-orders" class="w-5 h-5 rounded cursor-pointer" checked>
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                        <div>
+                            <p class="font-semibold text-gray-800">Payment Notifications</p>
+                            <p class="text-sm text-gray-600">Receive alerts about payment status changes</p>
+                        </div>
+                        <input type="checkbox" id="notif-payments" class="w-5 h-5 rounded cursor-pointer" checked>
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                        <div>
+                            <p class="font-semibold text-gray-800">Returns & Refunds</p>
+                            <p class="text-sm text-gray-600">Get notified about returns and refund requests</p>
+                        </div>
+                        <input type="checkbox" id="notif-returns" class="w-5 h-5 rounded cursor-pointer" checked>
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                        <div>
+                            <p class="font-semibold text-gray-800">Inventory Alerts</p>
+                            <p class="text-sm text-gray-600">Notify when product stock is running low</p>
+                        </div>
+                        <input type="checkbox" id="notif-inventory" class="w-5 h-5 rounded cursor-pointer" checked>
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                        <div>
+                            <p class="font-semibold text-gray-800">Marketing Emails</p>
+                            <p class="text-sm text-gray-600">Receive tips and promotional offers</p>
+                        </div>
+                        <input type="checkbox" id="notif-marketing" class="w-5 h-5 rounded cursor-pointer">
+                    </div>
+
+                    <button id="save-notifications-btn" class="w-full bg-green-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-green-600 transition mt-6">
+                        <i class="fas fa-save mr-2"></i> Save Preferences
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUser = AppState.currentUser;
+            
+            if (!currentUser || currentUser.role !== 'vendor') {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            Utils.updateAuthLinks();
+            setupAccountSectionNav();
+            loadProfileData();
+            showAccountSection('profile');
+        });
+
+        function setupAccountSectionNav() {
+            const buttons = document.querySelectorAll('#account-section-nav [data-section]');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const section = btn.getAttribute('data-section');
+                    showAccountSection(section);
+                });
+            });
+
+            // Profile form handlers
+            document.getElementById('profile-form').addEventListener('submit', saveProfileData);
+            document.getElementById('cancel-profile-btn').addEventListener('click', loadProfileData);
+            document.getElementById('upload-avatar-btn').addEventListener('click', uploadAvatar);
+
+            // Password form handler
+            document.getElementById('password-form').addEventListener('submit', changePassword);
+
+            // Billing form handler
+            document.getElementById('billing-form').addEventListener('submit', saveBillingInfo);
+
+            // Notifications handler
+            document.getElementById('save-notifications-btn').addEventListener('click', saveNotificationPreferences);
+
+            // 2FA handler
+            document.getElementById('enable-2fa-btn').addEventListener('click', enable2FA);
+
+            // Payment methods handler
+            document.getElementById('add-payment-method-btn').addEventListener('click', addPaymentMethod);
+
+            // Upgrade plan handler
+            document.getElementById('upgrade-plan-btn').addEventListener('click', upgradePlan);
+        }
+
+        function showAccountSection(section) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.account-section');
+            sections.forEach(s => s.classList.add('hidden'));
+
+            // Show selected section
+            const sectionEl = document.getElementById('section-' + section + '-content');
+            if (sectionEl) sectionEl.classList.remove('hidden');
+
+            // Update nav active state
+            const buttons = document.querySelectorAll('#account-section-nav [data-section]');
+            buttons.forEach(btn => {
+                if (btn.getAttribute('data-section') === section) {
+                    btn.classList.remove('hover:bg-gray-100', 'text-gray-600');
+                    btn.classList.add('bg-green-100', 'text-green-700', 'font-semibold', 'border-l-4', 'border-green-500');
+                } else {
+                    btn.classList.remove('bg-green-100', 'text-green-700', 'font-semibold', 'border-l-4', 'border-green-500');
+                    btn.classList.add('hover:bg-gray-100', 'text-gray-600');
+                }
+            });
+        }
+
+        function loadProfileData() {
+            const currentUser = AppState.currentUser;
+            if (!currentUser) return;
+
+            const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+            document.getElementById('profile-avatar').textContent = initials;
+
+            document.getElementById('profile-fullname').value = currentUser.name || '';
+            document.getElementById('profile-email').value = currentUser.email || '';
+            document.getElementById('profile-phone').value = currentUser.phone || '';
+            document.getElementById('profile-storename').value = currentUser.storeName || '';
+            document.getElementById('profile-address').value = currentUser.address || '';
+            document.getElementById('profile-city').value = currentUser.city || '';
+            document.getElementById('profile-postal').value = currentUser.postalCode || '';
+
+            // Load billing info
+            document.getElementById('billing-name').value = currentUser.name || '';
+            document.getElementById('billing-email').value = currentUser.email || '';
+            document.getElementById('billing-address').value = currentUser.address || '';
+            document.getElementById('billing-city').value = currentUser.city || '';
+            document.getElementById('billing-postal').value = currentUser.postalCode || '';
+
+            // Load notification preferences
+            const notifPrefs = JSON.parse(localStorage.getItem(`notifPrefs_${currentUser.id}`) || '{"orders":true,"payments":true,"returns":true,"inventory":true,"marketing":false}');
+            document.getElementById('notif-orders').checked = notifPrefs.orders;
+            document.getElementById('notif-payments').checked = notifPrefs.payments;
+            document.getElementById('notif-returns').checked = notifPrefs.returns;
+            document.getElementById('notif-inventory').checked = notifPrefs.inventory;
+            document.getElementById('notif-marketing').checked = notifPrefs.marketing;
+
+            // Load payment methods
+            loadPaymentMethods();
+        }
+
+        function saveProfileData(e) {
+            e.preventDefault();
+            const currentUser = AppState.currentUser;
+
+            const updatedData = {
+                name: document.getElementById('profile-fullname').value,
+                email: document.getElementById('profile-email').value,
+                phone: document.getElementById('profile-phone').value,
+                storeName: document.getElementById('profile-storename').value,
+                address: document.getElementById('profile-address').value,
+                city: document.getElementById('profile-city').value,
+                postalCode: document.getElementById('profile-postal').value
+            };
+
+            // Update in DB
+            const userIndex = DB.users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                DB.users[userIndex] = { ...DB.users[userIndex], ...updatedData };
+                localStorage.setItem('sariSariGoDB', JSON.stringify(DB));
+                
+                // Update current user in AppState
+                AppState.currentUser = { ...AppState.currentUser, ...updatedData };
+                localStorage.setItem('currentUser', JSON.stringify(AppState.currentUser));
+
+                Utils.showNotification('Profile updated successfully!', 'success');
+            }
+        }
+
+        function changePassword(e) {
+            e.preventDefault();
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (newPassword !== confirmPassword) {
+                Utils.showNotification('Passwords do not match', 'error');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                Utils.showNotification('Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            const currentUser = AppState.currentUser;
+            const user = DB.users.find(u => u.id === currentUser.id);
+
+            if (user && user.password === currentPassword) {
+                const userIndex = DB.users.findIndex(u => u.id === currentUser.id);
+                DB.users[userIndex].password = newPassword;
+                localStorage.setItem('sariSariGoDB', JSON.stringify(DB));
+                e.target.reset();
+                Utils.showNotification('Password changed successfully!', 'success');
+            } else {
+                Utils.showNotification('Current password is incorrect', 'error');
+            }
+        }
+
+        function uploadAvatar() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const currentUser = AppState.currentUser;
+                        const userIndex = DB.users.findIndex(u => u.id === currentUser.id);
+                        if (userIndex !== -1) {
+                            DB.users[userIndex].avatar = event.target.result;
+                            localStorage.setItem('sariSariGoDB', JSON.stringify(DB));
+                            AppState.currentUser.avatar = event.target.result;
+                            localStorage.setItem('currentUser', JSON.stringify(AppState.currentUser));
+                            loadProfileData();
+                            Utils.showNotification('Avatar updated successfully!', 'success');
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+
+        function saveBillingInfo(e) {
+            e.preventDefault();
+            const currentUser = AppState.currentUser;
+
+            const billingData = {
+                billingName: document.getElementById('billing-name').value,
+                billingEmail: document.getElementById('billing-email').value,
+                billingAddress: document.getElementById('billing-address').value,
+                billingCity: document.getElementById('billing-city').value,
+                billingPostal: document.getElementById('billing-postal').value
+            };
+
+            const userIndex = DB.users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                DB.users[userIndex] = { ...DB.users[userIndex], ...billingData };
+                localStorage.setItem('sariSariGoDB', JSON.stringify(DB));
+                Utils.showNotification('Billing information saved successfully!', 'success');
+            }
+        }
+
+        function loadPaymentMethods() {
+            const currentUser = AppState.currentUser;
+            const paymentMethods = JSON.parse(localStorage.getItem(`paymentMethods_${currentUser.id}`) || '[]');
+            const listEl = document.getElementById('payment-methods-list');
+
+            if (paymentMethods.length === 0) {
+                listEl.innerHTML = '<p class="text-gray-500 text-sm">No payment methods added yet</p>';
+            } else {
+                listEl.innerHTML = paymentMethods.map((method, idx) => `
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div class="flex items-center">
+                            <i class="fas fa-credit-card text-blue-500 mr-3"></i>
+                            <div>
+                                <p class="font-medium text-gray-800">${method.name}</p>
+                                <p class="text-sm text-gray-500">•••• ${method.last4}</p>
+                            </div>
+                        </div>
+                        <button onclick="deletePaymentMethod(${idx})" class="text-red-600 hover:text-red-800 text-sm">Remove</button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function addPaymentMethod() {
+            const cardNumber = prompt('Enter card number (last 4 digits only for demo):');
+            if (cardNumber && cardNumber.length >= 4) {
+                const currentUser = AppState.currentUser;
+                const paymentMethods = JSON.parse(localStorage.getItem(`paymentMethods_${currentUser.id}`) || '[]');
+                paymentMethods.push({
+                    name: 'Credit Card',
+                    last4: cardNumber.slice(-4)
+                });
+                localStorage.setItem(`paymentMethods_${currentUser.id}`, JSON.stringify(paymentMethods));
+                loadPaymentMethods();
+                Utils.showNotification('Payment method added successfully!', 'success');
+            }
+        }
+
+        function deletePaymentMethod(idx) {
+            if (confirm('Are you sure you want to remove this payment method?')) {
+                const currentUser = AppState.currentUser;
+                const paymentMethods = JSON.parse(localStorage.getItem(`paymentMethods_${currentUser.id}`) || '[]');
+                paymentMethods.splice(idx, 1);
+                localStorage.setItem(`paymentMethods_${currentUser.id}`, JSON.stringify(paymentMethods));
+                loadPaymentMethods();
+                Utils.showNotification('Payment method removed!', 'success');
+            }
+        }
+
+        function saveNotificationPreferences() {
+            const currentUser = AppState.currentUser;
+            const prefs = {
+                orders: document.getElementById('notif-orders').checked,
+                payments: document.getElementById('notif-payments').checked,
+                returns: document.getElementById('notif-returns').checked,
+                inventory: document.getElementById('notif-inventory').checked,
+                marketing: document.getElementById('notif-marketing').checked
+            };
+            localStorage.setItem(`notifPrefs_${currentUser.id}`, JSON.stringify(prefs));
+            Utils.showNotification('Notification preferences saved!', 'success');
+        }
+
+        function enable2FA() {
+            alert('Two-Factor Authentication setup:\n\n1. Download an authenticator app (Google Authenticator, Authy, etc.)\n2. Scan the QR code that will be generated\n3. Enter the 6-digit code to confirm\n\nThis is a demo implementation.');
+            Utils.showNotification('2FA feature will be implemented in the next update!', 'info');
+        }
+
+        function upgradePlan() {
+            alert('Upgrade to Pro Plan:\n\n• Unlimited products\n• Advanced analytics\n• Priority support\n• Promotional tools\n\nPrice: ₱299/month');
+            Utils.showNotification('Coming soon!', 'info');
+        }
+    </script>
+</body>
+</html>

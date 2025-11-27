@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders - SariSariGo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .status-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-inter">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-8">
+                    <a href="vendor-orders.html" class="flex items-center">
+                        <img src="products/logo.png" alt="SariSariGo" class="h-8 w-auto mr-3 object-contain" onerror="this.style.display='none'">
+                        <span class="text-2xl font-bold text-green-600">SariSariGo</span>
+                    </a>
+                    <nav class="hidden md:flex items-center space-x-8" id="vendor-nav">
+                        <a href="vendor-orders.html" class="text-gray-600 hover:text-green-600 transition font-semibold text-green-600 border-b-2 border-green-600">
+                            <i class="fas fa-boxes mr-2"></i>Orders
+                        </a>
+                        <a href="vendor-products.html" class="text-gray-600 hover:text-green-600 transition font-semibold">
+                            <i class="fas fa-cube mr-2"></i>Products
+                        </a>
+                        <a href="vendor-account.html" class="text-gray-600 hover:text-green-600 transition font-semibold">
+                            <i class="fas fa-user-cog mr-2"></i>Account
+                        </a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-4" id="auth-links">
+                        <!-- Auth links will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Page Title -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Orders Management</h1>
+            <p class="text-gray-600">Manage your buyer orders, cancellations, returns, and shipping settings</p>
+        </div>
+
+        <!-- Section Navigation -->
+        <div class="mb-6 border-b border-gray-200">
+            <nav class="flex space-x-2 flex-wrap" id="orders-section-nav">
+                <button id="section-buyer-orders" class="px-4 py-3 rounded-t-lg bg-green-100 text-green-700 font-semibold border-l-4 border-green-500 hover:bg-green-200 transition" data-section="buyer-orders">
+                    <i class="fas fa-box mr-2"></i>Buyer Orders
+                </button>
+                <button id="section-cancellations" class="px-4 py-3 rounded-t-lg text-gray-600 hover:bg-gray-100 transition" data-section="cancellations">
+                    <i class="fas fa-times-circle mr-2"></i>Cancellations
+                </button>
+                <button id="section-returns" class="px-4 py-3 rounded-t-lg text-gray-600 hover:bg-gray-100 transition" data-section="returns">
+                    <i class="fas fa-undo mr-2"></i>Returns / Refunds
+                </button>
+                <button id="section-shipping" class="px-4 py-3 rounded-t-lg text-gray-600 hover:bg-gray-100 transition" data-section="shipping">
+                    <i class="fas fa-truck mr-2"></i>Shipping Settings
+                </button>
+            </nav>
+        </div>
+
+        <!-- Buyer Orders Section -->
+        <div id="section-buyer-orders-content" class="orders-section">
+            <div class="glass-card rounded-2xl p-6 shadow-lg border border-white">
+                <h2 class="text-2xl font-semibold mb-6">Buyer Orders</h2>
+                <div class="overflow-x-auto rounded-xl border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Order Details</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Customer</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Total</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vendor-orders-list" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cancellations Section -->
+        <div id="section-cancellations-content" class="orders-section hidden">
+            <div class="glass-card rounded-2xl p-6 shadow-lg border border-white">
+                <h2 class="text-2xl font-semibold mb-6">Cancellations</h2>
+                <div class="overflow-x-auto rounded-xl border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Order #</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Customer</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Reason</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vendor-cancellations-list" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Returns / Refunds Section -->
+        <div id="section-returns-content" class="orders-section hidden">
+            <div class="glass-card rounded-2xl p-6 shadow-lg border border-white">
+                <h2 class="text-2xl font-semibold mb-6">Returns / Refunds</h2>
+                <div id="vendor-returns-list">
+                    <p class="text-sm text-gray-500">No returns or refunds recorded.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shipping Settings Section -->
+        <div id="section-shipping-content" class="orders-section hidden">
+            <div class="glass-card rounded-2xl p-6 shadow-lg border border-white">
+                <h2 class="text-2xl font-semibold mb-6">Shipping Settings</h2>
+                <div class="bg-gray-50 p-6 rounded-xl">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Delivery Fee (₱)</label>
+                            <input type="number" id="shipping-delivery-fee" class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" step="0.01">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Pickup Fee (₱)</label>
+                            <input type="number" id="shipping-pickup-fee" class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" step="0.01">
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <button id="save-shipping-btn" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition font-semibold">
+                            <i class="fas fa-save mr-2"></i>Save Settings
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUser = AppState.currentUser;
+            
+            if (!currentUser || currentUser.role !== 'vendor') {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            Utils.updateAuthLinks();
+            setupOrdersSectionNav();
+            showOrdersSection('buyer-orders');
+        });
+
+        function setupOrdersSectionNav() {
+            const buttons = document.querySelectorAll('#orders-section-nav [data-section]');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const section = btn.getAttribute('data-section');
+                    showOrdersSection(section);
+                });
+            });
+
+            const saveShippingBtn = document.getElementById('save-shipping-btn');
+            if (saveShippingBtn) {
+                saveShippingBtn.addEventListener('click', saveVendorShippingSettings);
+            }
+        }
+
+        function showOrdersSection(section) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.orders-section');
+            sections.forEach(s => s.classList.add('hidden'));
+
+            // Show selected section
+            const sectionEl = document.getElementById('section-' + section + '-content');
+            if (sectionEl) sectionEl.classList.remove('hidden');
+
+            // Update nav active state
+            const buttons = document.querySelectorAll('#orders-section-nav [data-section]');
+            buttons.forEach(btn => {
+                if (btn.getAttribute('data-section') === section) {
+                    btn.classList.remove('hover:bg-gray-100', 'text-gray-600');
+                    btn.classList.add('bg-green-100', 'text-green-700', 'font-semibold', 'border-l-4', 'border-green-500');
+                } else {
+                    btn.classList.remove('bg-green-100', 'text-green-700', 'font-semibold', 'border-l-4', 'border-green-500');
+                    btn.classList.add('hover:bg-gray-100', 'text-gray-600');
+                }
+            });
+
+            // Load content for the section
+            if (section === 'buyer-orders') {
+                loadVendorOrders();
+            } else if (section === 'cancellations') {
+                loadVendorCancellations();
+            } else if (section === 'returns') {
+                loadVendorReturns();
+            } else if (section === 'shipping') {
+                populateVendorShippingSettings();
+            }
+        }
+
+        function loadVendorOrders() {
+            const currentUser = AppState.currentUser;
+            const ordersList = document.getElementById('vendor-orders-list');
+            const vendorOrders = DB.orders.filter(order => order.vendorId === currentUser.id);
+            
+            if (vendorOrders.length === 0) {
+                ordersList.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="px-6 py-8 text-center text-gray-500">
+                            <i class="fas fa-clipboard-list text-4xl mb-3 text-gray-300"></i>
+                            <p class="text-lg">No orders yet.</p>
+                            <p class="text-sm mt-1">Orders will appear here when customers purchase your products.</p>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                ordersList.innerHTML = vendorOrders.map(order => {
+                    const customer = DB.users.find(u => u.id === order.userId);
+                    const itemsCount = order.items ? order.items.length : 0;
+                    
+                    return `
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="bg-gray-100 p-2 rounded-lg mr-3">
+                                        <i class="fas fa-receipt text-gray-600"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium text-gray-900">Order #${order.id}</div>
+                                        <div class="text-sm text-gray-500">${itemsCount} item${itemsCount !== 1 ? 's' : ''}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-gray-900">${customer ? customer.name : 'Unknown Customer'}</div>
+                                <div class="text-sm text-gray-500">${order.customerPhone || 'No phone'}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap font-semibold text-gray-900">${Utils.formatPrice(order.total || 0)}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="status-badge ${getStatusColor(order.status)}">${order.status}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <button onclick="updateOrderStatus(${order.id})" class="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600 transition">
+                                    Update Status
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        function loadVendorCancellations() {
+            const currentUser = AppState.currentUser;
+            const listEl = document.getElementById('vendor-cancellations-list');
+            if (!listEl || !currentUser) return;
+
+            const cancellations = DB.orders.filter(o => o.vendorId === currentUser.id && o.status === 'cancelled');
+            if (cancellations.length === 0) {
+                listEl.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                            <p class="text-lg">No cancellations found.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            listEl.innerHTML = cancellations.map(o => {
+                const customer = DB.users.find(u => u.id === o.userId);
+                return `
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-6 py-4">#${o.id}</td>
+                        <td class="px-6 py-4">${customer ? customer.name : 'Unknown'}</td>
+                        <td class="px-6 py-4">${o.cancellationReason || 'N/A'}</td>
+                        <td class="px-6 py-4">${new Date(o.orderDate).toLocaleDateString()}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function loadVendorReturns() {
+            const currentUser = AppState.currentUser;
+            const container = document.getElementById('vendor-returns-list');
+            if (!container || !currentUser) return;
+
+            const returns = DB.orders.filter(o => o.vendorId === currentUser.id && (o.status === 'returned' || o.status === 'refund'));
+            if (returns.length === 0) {
+                container.innerHTML = '<p class="text-sm text-gray-500">No returns or refunds recorded.</p>';
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="overflow-x-auto rounded-xl border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Order #</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Customer</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            ${returns.map(o => {
+                                const customer = DB.users.find(u => u.id === o.userId);
+                                return `
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <td class="px-6 py-4">#${o.id}</td>
+                                        <td class="px-6 py-4">${customer ? customer.name : 'Unknown'}</td>
+                                        <td class="px-6 py-4">${o.status}</td>
+                                        <td class="px-6 py-4">${o.returnNotes || 'N/A'}</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function populateVendorShippingSettings() {
+            const currentUser = AppState.currentUser;
+            if (!currentUser) return;
+
+            const key = `vendorShipping_${currentUser.id}`;
+            const raw = localStorage.getItem(key);
+            let settings = null;
+            if (raw) {
+                try { settings = JSON.parse(raw); } catch(e) { settings = null; }
+            }
+
+            const deliveryInput = document.getElementById('shipping-delivery-fee');
+            const pickupInput = document.getElementById('shipping-pickup-fee');
+
+            if (settings) {
+                if (deliveryInput) deliveryInput.value = settings.deliveryFee || AppState.deliveryFee;
+                if (pickupInput) pickupInput.value = settings.pickupFee || AppState.pickupFee;
+            } else {
+                if (deliveryInput) deliveryInput.value = AppState.deliveryFee;
+                if (pickupInput) pickupInput.value = AppState.pickupFee;
+            }
+        }
+
+        function saveVendorShippingSettings() {
+            const currentUser = AppState.currentUser;
+            if (!currentUser) return;
+
+            const deliveryInput = document.getElementById('shipping-delivery-fee');
+            const pickupInput = document.getElementById('shipping-pickup-fee');
+            if (!deliveryInput || !pickupInput) return;
+
+            const deliveryFee = parseFloat(deliveryInput.value) || 0;
+            const pickupFee = parseFloat(pickupInput.value) || 0;
+
+            const key = `vendorShipping_${currentUser.id}`;
+            const settings = { deliveryFee, pickupFee };
+            localStorage.setItem(key, JSON.stringify(settings));
+            Utils.showNotification('Shipping settings saved', 'success');
+        }
+
+        function updateOrderStatus(orderId) {
+            const order = DB.orders.find(o => o.id === orderId);
+            if (order) {
+                const newStatus = prompt('Enter new status (pending/confirmed/preparing/shipped/out_for_delivery/delivered/ready_for_pickup/completed/cancelled):', order.status);
+                if (newStatus) {
+                    Utils.updateOrderStatus(orderId, newStatus);
+                    loadVendorOrders();
+                    Utils.showNotification('Order status updated', 'success');
+                }
+            }
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'pending': 'bg-yellow-100 text-yellow-800',
+                'Processing': 'bg-yellow-100 text-yellow-800',
+                'confirmed': 'bg-blue-100 text-blue-800',
+                'preparing': 'bg-indigo-100 text-indigo-800',
+                'shipped': 'bg-purple-100 text-purple-800',
+                'out_for_delivery': 'bg-orange-100 text-orange-800',
+                'ready_for_pickup': 'bg-green-100 text-green-800',
+                'delivered': 'bg-green-100 text-green-800',
+                'completed': 'bg-green-100 text-green-800',
+                'cancelled': 'bg-red-100 text-red-800'
+            };
+            return colors[status] || 'bg-gray-100 text-gray-800';
+        }
+    </script>
+</body>
+</html>
