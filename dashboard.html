@@ -412,20 +412,30 @@
     <script>
         // Enhanced Dashboard functionality
         document.addEventListener('DOMContentLoaded', function() {
-            const currentUser = AppState.currentUser;
+            // Reload current user from localStorage to get fresh data
+            const rawUser = localStorage.getItem('currentUser');
+            const currentUser = rawUser ? JSON.parse(rawUser) : AppState.currentUser;
             
             if (!currentUser) {
                 window.location.href = 'login.html';
                 return;
             }
 
-            // Redirect vendors to vendor-orders page
+            // Only redirect vendors to vendor-orders page
             if (currentUser.role === 'vendor') {
                 window.location.href = 'vendor-orders.html';
                 return;
             }
+            
+            // If buyer role, continue to initialize dashboard
+            if (currentUser.role === 'buyer') {
+                initializeDashboard();
+                return;
+            }
 
-            initializeDashboard();
+            // Fallback - unknown role, show error
+            Utils.showNotification('Unknown account type', 'error');
+            window.location.href = 'login.html';
         });
 
         function initializeDashboard() {

@@ -354,10 +354,6 @@ const Auth = {
     },
 
     logout() {
-        // Clear cart when logging out
-        AppState.cart = [];
-        localStorage.removeItem('sariSariGoCart');
-        
         AppState.currentUser = null;
         localStorage.removeItem('currentUser');
         Utils.updateAuthLinks();
@@ -582,9 +578,9 @@ const Cart = {
                                                 <i class="fas fa-minus text-xs"></i>
                                             </button>
                                             <span class="w-8 text-center font-medium">${item.quantity}</span>
-                                            <button onclick="Cart.updateQuantity(${item.productId}, ${item.quantity + 1})" 
-                                                    ${item.product.stock <= item.quantity ? 'disabled' : ''}
-                                                    class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition ${item.product.stock <= item.quantity ? 'opacity-50 cursor-not-allowed' : ''}">
+                                            <button onclick="${item.product.stock <= item.quantity ? 'return false' : `Cart.updateQuantity(${item.productId}, ${item.quantity + 1})`}" 
+                                                    class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition ${item.product.stock <= item.quantity ? 'opacity-50 cursor-not-allowed' : ''}"
+                                                    ${item.product.stock <= item.quantity ? 'disabled' : ''}>
                                                 <i class="fas fa-plus text-xs"></i>
                                             </button>
                                         </div>
