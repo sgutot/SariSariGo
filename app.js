@@ -490,11 +490,10 @@ const Cart = {
         this.saveCart();
         Utils.updateCartCount();
         Utils.showNotification('Item removed from cart', 'success');
-        
-        // Re-render the cart if we're on the cart page
-        if (window.location.pathname.includes('cart.html')) {
-            this.renderCart();
-        }
+        // Re-render the cart UI if a render function exists
+        try {
+            if (typeof this.renderCart === 'function') this.renderCart();
+        } catch (e) { /* ignore */ }
     },
 
     updateQuantity(productId, quantity) {
@@ -508,11 +507,10 @@ const Cart = {
                     item.quantity = quantity;
                     this.saveCart();
                     Utils.updateCartCount();
-                    
-                    // Re-render the cart if we're on the cart page
-                    if (window.location.pathname.includes('cart.html')) {
-                        this.renderCart();
-                    }
+                    // Re-render the cart UI if a render function exists
+                    try {
+                        if (typeof this.renderCart === 'function') this.renderCart();
+                    } catch (e) { /* ignore */ }
                 } else {
                     Utils.showNotification(`Only ${product.stock} available`, 'error');
                 }
@@ -525,11 +523,10 @@ const Cart = {
         this.saveCart();
         Utils.updateCartCount();
         Utils.showNotification('Cart cleared', 'success');
-        
-        // Re-render the cart if we're on the cart page
-        if (window.location.pathname.includes('cart.html')) {
-            this.renderCart();
-        }
+        // Re-render the cart UI if a render function exists
+        try {
+            if (typeof this.renderCart === 'function') this.renderCart();
+        } catch (e) { /* ignore */ }
     },
 
     saveCart() {

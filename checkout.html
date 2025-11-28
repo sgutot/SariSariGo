@@ -101,8 +101,19 @@ function renderCheckout() {
     const checkoutContainer = document.getElementById('checkout-content');
     if (!checkoutContainer) return;
 
-    const cartItems = Cart.getCartItems();
-    
+    // If user proceeded from cart with selected items, use that selection
+    let checkoutSelection = null;
+    try { checkoutSelection = JSON.parse(localStorage.getItem('sariSariGoCheckout')); } catch (e) { checkoutSelection = null; }
+
+    let cartItems = [];
+    if (checkoutSelection && Array.isArray(checkoutSelection) && checkoutSelection.length > 0) {
+        // Map selection to full cart item objects
+        const allItems = Cart.getCartItems();
+        cartItems = checkoutSelection.map(si => allItems.find(ai => ai.productId === si.productId)).filter(Boolean);
+    } else {
+        cartItems = Cart.getCartItems();
+    }
+
     if (cartItems.length === 0) {
         checkoutContainer.innerHTML = `
             <div class="text-center py-12">
@@ -117,7 +128,8 @@ function renderCheckout() {
         return;
     }
 
-    const subtotal = Cart.getCartTotal();
+    // Compute subtotal based on selected checkout items (or full cart)
+    const subtotal = cartItems.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
     const deliveryFee = AppState.deliveryMethod === 'delivery' ? AppState.deliveryFee : AppState.pickupFee;
     const total = subtotal + deliveryFee;
 
@@ -260,9 +272,10 @@ function placeOrder(e) {
     }
 
     const formData = new FormData(e.target);
-    const cartItems = Cart.getCartItems();
+    // Note: when placing the order, remove only the items involved in this checkout (if selection used)
+    const cartItemsForOrder = cartItems;
     
-    if (cartItems.length === 0) {
+    if (cartItemsForOrder.length === 0) {
         Utils.showNotification('Your cart is empty', 'error');
         return;
     }
@@ -278,13 +291,13 @@ function placeOrder(e) {
     // Create order
     const orderData = {
         userId: AppState.currentUser.id,
-        vendorId: cartItems[0].product.vendorId, // Assuming single vendor per order for simplicity
-        items: cartItems.map(item => ({
+        vendorId: cartItemsForOrder[0].product.vendorId, // Assuming single vendor per order for simplicity
+        items: cartItemsForOrder.map(item => ({
             productId: item.productId,
             quantity: item.quantity,
             price: item.product.price
         })),
-        total: Cart.getCartTotal() + (AppState.deliveryMethod === 'delivery' ? AppState.deliveryFee : AppState.pickupFee),
+        total: subtotal + (AppState.deliveryMethod === 'delivery' ? AppState.deliveryFee : AppState.pickupFee),
         customerName: formData.get('name'),
         customerPhone: formData.get('phone'),
         customerAddress: formData.get('address'),
@@ -298,15 +311,30 @@ function placeOrder(e) {
     const newOrder = Utils.addOrder(orderData);
     
     // Update product stock
-    cartItems.forEach(item => {
+    cartItemsForOrder.forEach(item => {
         const product = DB.products.find(p => p.id === item.productId);
         if (product) {
             product.stock -= item.quantity;
         }
     });
 
-    // Clear cart
-    Cart.clearCart();
+    // Remove ordered items from cart (if selection used) or clear whole cart
+    try {
+        const checkoutSelectionKey = localStorage.getItem('sariSariGoCheckout');
+        if (checkoutSelectionKey) {
+            // Remove those items from AppState.cart
+            const toRemove = JSON.parse(checkoutSelectionKey).map(i => i.productId);
+            toRemove.forEach(pid => Cart.removeFromCart(pid));
+            // Clear the selection key
+            localStorage.removeItem('sariSariGoCheckout');
+            localStorage.removeItem('sariSariGoSelected');
+        } else {
+            Cart.clearCart();
+        }
+    } catch (e) {
+        // Fallback: clear entire cart if something goes wrong
+        Cart.clearCart();
+    }
     
     Utils.showNotification('Order placed successfully!', 'success');
     

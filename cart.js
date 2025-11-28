@@ -35,6 +35,11 @@ if (typeof Cart !== 'undefined') {
             return;
         }
 
+        // Determine selected items (persisted selection stored in localStorage)
+        const selectedKey = 'sariSariGoSelected';
+        let selected = [];
+        try { selected = JSON.parse(localStorage.getItem(selectedKey)) || []; } catch (e) { selected = []; }
+
         const subtotal = this.getCartTotal();
         const deliveryFee = AppState.deliveryMethod === 'delivery' ? AppState.deliveryFee : AppState.pickupFee;
         const total = subtotal + deliveryFee;
@@ -59,43 +64,52 @@ if (typeof Cart !== 'undefined') {
 window.setDeliveryMethod = updateDeliveryMethod;
 window.updateCheckoutDeliveryMethod = updateDeliveryMethod;
 
-cartContainer.innerHTML = `
+        cartContainer.innerHTML = `
      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
          <div class="lg:col-span-2">
               <div class="bg-white rounded-lg shadow-md p-6">
                  <h2 class="text-xl font-bold mb-4">Cart Items</h2>
+                        <div class="flex items-center mb-3">
+                            <label class="inline-flex items-center">
+                                <input id="select-all-checkbox" type="checkbox" class="mr-2" ${selected.length === cartItems.length && cartItems.length > 0 ? 'checked' : ''}>
+                                <span class="text-sm text-gray-600">Select all items</span>
+                            </label>
+                        </div>
                     <div class="space-y-4">
-                        ${cartItems.map(item => `
+                            ${cartItems.map(item => `
                         <div class="flex items-center justify-between border-b pb-4">
                             <div class="flex items-center space-x-4">
-                            <img src="${item.product.imageUrl}" alt="${item.product.name}" 
-                            class="w-16 h-16 rounded object-cover"
-                            onerror="this.src='https://via.placeholder.com/100x100?text=No+Image'">
+                                <label class="inline-flex items-center mr-2">
+                                    <input type="checkbox" class="cart-item-select mr-2" data-id="${item.productId}" ${selected.includes(item.productId) ? 'checked' : ''}>
+                                </label>
+                                <img src="${item.product.imageUrl}" alt="${item.product.name}" 
+                                class="w-16 h-16 rounded object-cover"
+                                onerror="this.src='https://via.placeholder.com/100x100?text=No+Image'">
                                 <div>
-                                            <h3 class="font-semibold">${item.product.name}</h3>
-                                            <p class="text-green-600 font-bold">${Utils.formatPrice(item.product.price)}</p>
-                                            <p class="text-sm text-gray-500">Stock: ${item.product.stock}</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center space-x-3">
-                                        <div class="flex items-center space-x-2">
-                                            <button onclick="Cart.updateQuantity(${item.productId}, ${item.quantity - 1})" 
-                                                    class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition">
-                                                <i class="fas fa-minus text-xs"></i>
-                                            </button>
-                                            <span class="w-8 text-center font-medium">${item.quantity}</span>
-                                            <button onclick="Cart.updateQuantity(${item.productId}, ${item.quantity + 1})" 
-                                                    ${item.product.stock <= item.quantity ? 'disabled' : ''}
-                                                    class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition ${item.product.stock <= item.quantity ? 'opacity-50 cursor-not-allowed' : ''}">
-                                                <i class="fas fa-plus text-xs"></i>
-                                            </button>
-                                        </div>
-                                        <button onclick="Cart.removeFromCart(${item.productId})" 
-                                                class="text-red-500 hover:text-red-700 ml-4 transition">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
+                                    <h3 class="font-semibold">${item.product.name}</h3>
+                                    <p class="text-green-600 font-bold">${Utils.formatPrice(item.product.price)}</p>
+                                    <p class="text-sm text-gray-500">Stock: ${item.product.stock}</p>
                                 </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="flex items-center space-x-2">
+                                    <button type="button" onclick="Cart.updateQuantity(${item.productId}, ${item.quantity - 1})" 
+                                            class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition">
+                                        <i class="fas fa-minus text-xs"></i>
+                                    </button>
+                                    <span class="w-8 text-center font-medium">${item.quantity}</span>
+                                    <button type="button" onclick="Cart.updateQuantity(${item.productId}, ${item.quantity + 1})" 
+                                            ${item.product.stock <= item.quantity ? 'disabled' : ''}
+                                            class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition ${item.product.stock <= item.quantity ? 'opacity-50 cursor-not-allowed' : ''}">
+                                        <i class="fas fa-plus text-xs"></i>
+                                    </button>
+                                </div>
+                                <button onclick="Cart.removeFromCart(${item.productId})" 
+                                        class="text-red-500 hover:text-red-700 ml-4 transition">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
                             `).join('')}
                         </div>
                     </div>
@@ -140,10 +154,15 @@ cartContainer.innerHTML = `
                         </div>
                     </div>
                     
-                    <a href="checkout.html" 
-                       class="w-full bg-green-500 text-white text-center font-bold py-3 px-6 rounded-lg hover:bg-green-600 transition block">
-                        Proceed to Checkout
-                    </a>
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-semibold">Selected Subtotal:</span>
+                            <span id="selected-subtotal">${Utils.formatPrice(0)}</span>
+                        </div>
+                        <button id="proceed-selected-btn" class="w-full bg-green-500 text-white text-center font-bold py-3 px-6 rounded-lg hover:bg-green-600 transition block disabled:opacity-60" disabled>
+                            Proceed to Checkout (Selected Items)
+                        </button>
+                    </div>
                     
                     <button onclick="Cart.clearCart()" 
                             class="w-full mt-3 bg-red-500 text-white text-center font-bold py-3 px-6 rounded-lg hover:bg-red-600 transition">
@@ -152,6 +171,83 @@ cartContainer.innerHTML = `
                 </div>
             </div>
         `;
+
+        // After rendering, wire up selection handlers
+        (function wireSelection() {
+            const selectedKey = 'sariSariGoSelected';
+            let selected = [];
+            try { selected = JSON.parse(localStorage.getItem(selectedKey)) || []; } catch (e) { selected = []; }
+
+            const itemCheckboxes = Array.from(document.querySelectorAll('.cart-item-select'));
+            const selectAll = document.getElementById('select-all-checkbox');
+            const selectedSubtotalEl = document.getElementById('selected-subtotal');
+            const proceedBtn = document.getElementById('proceed-selected-btn');
+
+            function computeSelectedSubtotal() {
+                let sum = 0;
+                for (const item of cartItems) {
+                    if (selected.includes(item.productId)) {
+                        sum += (item.product.price || 0) * (item.quantity || 0);
+                    }
+                }
+                return sum;
+            }
+
+            function updateSelectedUI() {
+                const sum = computeSelectedSubtotal();
+                if (selectedSubtotalEl) selectedSubtotalEl.textContent = Utils.formatPrice(sum);
+                if (proceedBtn) {
+                    proceedBtn.disabled = selected.length === 0;
+                    proceedBtn.classList.toggle('opacity-60', selected.length === 0);
+                }
+                // update select-all checkbox
+                if (selectAll) selectAll.checked = (selected.length === cartItems.length && cartItems.length > 0);
+            }
+
+            // Attach listeners to individual checkboxes
+            itemCheckboxes.forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    const id = parseInt(cb.getAttribute('data-id'));
+                    if (cb.checked) {
+                        if (!selected.includes(id)) selected.push(id);
+                    } else {
+                        selected = selected.filter(x => x !== id);
+                    }
+                    try { localStorage.setItem(selectedKey, JSON.stringify(selected)); } catch (e) { /* ignore */ }
+                    updateSelectedUI();
+                });
+            });
+
+            // Select-all handler
+            if (selectAll) {
+                selectAll.addEventListener('change', () => {
+                    if (selectAll.checked) {
+                        selected = cartItems.map(i => i.productId);
+                        itemCheckboxes.forEach(cb => cb.checked = true);
+                    } else {
+                        selected = [];
+                        itemCheckboxes.forEach(cb => cb.checked = false);
+                    }
+                    try { localStorage.setItem(selectedKey, JSON.stringify(selected)); } catch (e) { /* ignore */ }
+                    updateSelectedUI();
+                });
+            }
+
+            // Proceed button
+            if (proceedBtn) {
+                proceedBtn.addEventListener('click', () => {
+                    if (selected.length === 0) return;
+                    // Build checkout payload: array of { productId, quantity }
+                    const checkoutItems = cartItems.filter(i => selected.includes(i.productId)).map(i => ({ productId: i.productId, quantity: i.quantity }));
+                    try { localStorage.setItem('sariSariGoCheckout', JSON.stringify(checkoutItems)); } catch (e) { /* ignore */ }
+                    // Navigate to checkout
+                    window.location.href = 'checkout.html';
+                });
+            }
+
+            // Initialize UI
+            updateSelectedUI();
+        })();
     };
 }
 
