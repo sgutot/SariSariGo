@@ -384,14 +384,62 @@
 
         function updateOrderStatus(orderId) {
             const order = DB.orders.find(o => o.id === orderId);
-            if (order) {
-                const newStatus = prompt('Enter new status (pending/confirmed/preparing/shipped/out_for_delivery/delivered/ready_for_pickup/completed/cancelled):', order.status);
-                if (newStatus) {
+            if (!order) {
+                Utils.showNotification('Order not found', 'error');
+                return;
+            }
+
+            const statusOptions = [
+                { value: 'pending', label: 'Order Placed' },
+                { value: 'confirmed', label: 'Order Confirmed' },
+                { value: 'preparing', label: 'Preparing for Delivery' },
+                { value: 'shipped', label: 'Shipped' },
+                { value: 'out_for_delivery', label: 'Out for Delivery' },
+                { value: 'delivered', label: 'Delivered' },
+                { value: 'completed', label: 'Completed' },
+                { value: 'cancelled', label: 'Cancelled' }
+            ];
+
+            // Create modal
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            modal.innerHTML = `
+                <div class="bg-white rounded-2xl p-6 w-full max-w-md mx-auto">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">Update Order Status</h3>
+                        <button id="close-status-modal" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="space-y-4">
+                        <p class="text-sm text-gray-600">Order #${order.id} • Current: <strong>${(statusOptions.find(s => s.value === order.status) || { label: order.status }).label}</strong></p>
+                        <label class="block text-sm font-medium text-gray-700">Select new status</label>
+                        <select id="status-select" class="w-full border border-gray-300 rounded-xl px-4 py-2">
+                            ${statusOptions.map(opt => `<option value="${opt.value}" ${opt.value === order.status ? 'selected' : ''}>${opt.label}</option>`).join('')}
+                        </select>
+                        <div class="flex justify-end space-x-2 mt-4">
+                            <button id="cancel-status-btn" class="px-4 py-2 rounded bg-gray-200">Cancel</button>
+                            <button id="save-status-btn" class="px-4 py-2 rounded bg-green-500 text-white">Save</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            // Handlers
+            document.getElementById('close-status-modal').addEventListener('click', () => modal.remove());
+            document.getElementById('cancel-status-btn').addEventListener('click', () => modal.remove());
+            document.getElementById('save-status-btn').addEventListener('click', () => {
+                const sel = document.getElementById('status-select');
+                const newStatus = sel.value;
+                if (newStatus && newStatus !== order.status) {
                     Utils.updateOrderStatus(orderId, newStatus);
                     loadVendorOrders();
                     Utils.showNotification('Order status updated', 'success');
+                    modal.remove();
+                } else {
+                    modal.remove();
                 }
-            }
+            });
         }
 
         function getStatusColor(status) {

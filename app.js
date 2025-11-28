@@ -343,9 +343,23 @@ const Auth = {
 
         AppState.currentUser = user;
         localStorage.setItem('currentUser', JSON.stringify(user));
+
+        // Restore user's saved cart (if any). If none, keep existing cart (guest cart) or empty.
+        try {
+            const saved = localStorage.getItem(`sariSariGoCart_user_${user.id}`);
+            if (saved) {
+                AppState.cart = JSON.parse(saved) || [];
+            }
+            // Ensure global cart reflects the current AppState for UI
+            localStorage.setItem('sariSariGoCart', JSON.stringify(AppState.cart));
+        } catch (e) {
+            console.warn('Failed to restore user cart', e);
+        }
+
         Utils.showNotification('Login successful!', 'success');
 
         Utils.updateAuthLinks();
+        Utils.updateCartCount();
 
         setTimeout(() => {
             window.location.href = 'dashboard.html';
@@ -354,11 +368,25 @@ const Auth = {
     },
 
     logout() {
+        // Save the current user's cart under their user key so it can be restored later
+        try {
+            if (AppState.currentUser && AppState.currentUser.id) {
+                localStorage.setItem(`sariSariGoCart_user_${AppState.currentUser.id}`, JSON.stringify(AppState.cart || []));
+            }
+        } catch (e) {
+            console.warn('Failed to save per-user cart on logout', e);
+        }
+
+        // Clear in-memory cart and global cart used by the UI so logged-out users see an empty cart
         AppState.currentUser = null;
+        AppState.cart = [];
         localStorage.removeItem('currentUser');
+        localStorage.setItem('sariSariGoCart', JSON.stringify([]));
+
         Utils.updateAuthLinks();
         Utils.updateCartCount();
         Utils.showNotification('Logged out successfully', 'success');
+
         // Redirect to home page immediately
         window.location.href = 'index.html';
     },
@@ -505,7 +533,17 @@ const Cart = {
     },
 
     saveCart() {
+        // Always keep a global cart for the UI
         localStorage.setItem('sariSariGoCart', JSON.stringify(AppState.cart));
+
+        // If a user is logged in, also persist a per-user cart so it can be restored when they login again
+        if (AppState.currentUser && AppState.currentUser.id) {
+            try {
+                localStorage.setItem(`sariSariGoCart_user_${AppState.currentUser.id}`, JSON.stringify(AppState.cart));
+            } catch (e) {
+                console.warn('Failed to save per-user cart', e);
+            }
+        }
     },
 
     getCartItems() {
@@ -573,16 +611,22 @@ const Cart = {
                                     </div>
                                     <div class="flex items-center space-x-3">
                                         <div class="flex items-center space-x-2">
-                                            <button onclick="Cart.updateQuantity(${item.productId}, ${item.quantity - 1})" 
+                                            <button type="button" onclick="Cart.updateQuantity(${item.productId}, ${item.quantity - 1})" 
                                                     class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition">
                                                 <i class="fas fa-minus text-xs"></i>
                                             </button>
                                             <span class="w-8 text-center font-medium">${item.quantity}</span>
-                                            <button onclick="${item.product.stock <= item.quantity ? 'return false' : `Cart.updateQuantity(${item.productId}, ${item.quantity + 1})`}" 
-                                                    class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition ${item.product.stock <= item.quantity ? 'opacity-50 cursor-not-allowed' : ''}"
-                                                    ${item.product.stock <= item.quantity ? 'disabled' : ''}>
+                                            ${item.product.stock <= item.quantity ? `
+                                            <button type="button" disabled
+                                                    class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center opacity-50 cursor-not-allowed">
                                                 <i class="fas fa-plus text-xs"></i>
                                             </button>
+                                            ` : `
+                                            <button type="button" onclick="Cart.updateQuantity(${item.productId}, ${item.quantity + 1})" 
+                                                    class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition">
+                                                <i class="fas fa-plus text-xs"></i>
+                                            </button>
+                                            `}
                                         </div>
                                         <button onclick="Cart.removeFromCart(${item.productId})" 
                                                 class="text-red-500 hover:text-red-700 ml-4 transition">
