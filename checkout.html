@@ -93,6 +93,8 @@
     <script src="cart.js"></script>
 
     <script>
+let globalCheckoutItems = []; // Store cart items globally for placeOrder function
+
 document.addEventListener('DOMContentLoaded', function() {
     renderCheckout();
 });
@@ -113,6 +115,9 @@ function renderCheckout() {
     } else {
         cartItems = Cart.getCartItems();
     }
+
+    // Store for use in placeOrder
+    globalCheckoutItems = cartItems;
 
     if (cartItems.length === 0) {
         checkoutContainer.innerHTML = `
@@ -272,8 +277,7 @@ function placeOrder(e) {
     }
 
     const formData = new FormData(e.target);
-    // Note: when placing the order, remove only the items involved in this checkout (if selection used)
-    const cartItemsForOrder = cartItems;
+    const cartItemsForOrder = globalCheckoutItems;
     
     if (cartItemsForOrder.length === 0) {
         Utils.showNotification('Your cart is empty', 'error');

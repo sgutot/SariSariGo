@@ -87,6 +87,7 @@ window.updateCheckoutDeliveryMethod = updateDeliveryMethod;
                                 onerror="this.src='https://via.placeholder.com/100x100?text=No+Image'">
                                 <div>
                                     <h3 class="font-semibold">${item.product.name}</h3>
+                                    <p class="text-sm text-gray-500">Vendor: ${(() => { const v = Utils.getVendorById(item.product.vendorId); return v ? v.name : 'Unknown Vendor'; })()}</p>
                                     <p class="text-green-600 font-bold">${Utils.formatPrice(item.product.price)}</p>
                                     <p class="text-sm text-gray-500">Stock: ${item.product.stock}</p>
                                 </div>
