@@ -14,12 +14,12 @@
     <header class="bg-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <div class="flex items-center space-x-8">
+                <div class="flex items-center space-x-4 md:space-x-8">
                     <a href="index.html" class="flex items-center">
                         <img src="products/logo.png" alt="SariSariGo" class="h-8 w-auto mr-3 object-contain" onerror="this.style.display='none'">
                         <span class="text-2xl font-bold text-green-600">SariSariGo</span>
                     </a>
-                    <nav class="hidden md:flex items-center space-x-8">
+                    <nav id="desktop-nav" class="hidden md:flex items-center space-x-8">
                         <a href="index.html" class="text-gray-600 hover:text-green-600 transition">Home</a>
                         <a href="products.html" class="text-gray-600 hover:text-green-600 transition">Products</a>
                         <a href="vendors.html" class="text-gray-600 hover:text-green-600 transition">Vendors</a>
@@ -42,12 +42,20 @@
                     <div class="hidden md:flex items-center space-x-4" id="auth-links">
                         <!-- Auth links will be populated by JavaScript -->
                     </div>
-                    <button class="md:hidden text-gray-600 hover:text-green-600">
+                    <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-green-600 focus:outline-none">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
                 </div>
             </div>
         </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <nav class="flex flex-col space-y-2 px-4 py-4">
+                <a href="index.html" class="text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition">Home</a>
+                <a href="products.html" class="text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition">Products</a>
+                <a href="vendors.html" class="text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition">Vendors</a>
+            </nav>
     </header>
 
     <main class="container mx-auto px-4 py-8">
@@ -93,6 +101,19 @@
     <script src="cart.js"></script>
 
     <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when a link is clicked
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('mobile-menu').classList.add('hidden');
+            });
+        });
+
 let globalCheckoutItems = []; // Store cart items globally for placeOrder function
 
 document.addEventListener('DOMContentLoaded', function() {

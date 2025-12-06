@@ -19,7 +19,7 @@
             <div class="flex items-center justify-between h-16">
                 
                 <!-- Logo and Navigation -->
-                <div class="flex items-center space-x-8">
+                <div class="flex items-center space-x-4 md:space-x-8">
                     <a href="index.html" class="flex items-center">
                         <img src="products/logo.png" alt="SariSariGo" 
                              class="h-8 w-auto mr-3 object-contain" 
@@ -27,10 +27,10 @@
                         <span class="text-2xl font-bold text-green-600">SariSariGo</span>
                     </a>
                     
-                    <nav class="flex items-center space-x-4 md:space-x-8">
-                        <a href="index.html" class="text-xs sm:text-sm md:text-base text-gray-600 hover:text-green-600 transition whitespace-nowrap">Home</a>
-                        <a href="products.html" class="text-xs sm:text-sm md:text-base text-gray-600 hover:text-green-600 transition whitespace-nowrap">Products</a>
-                        <a href="vendors.html" class="text-xs sm:text-sm md:text-base text-gray-600 hover:text-green-600 transition whitespace-nowrap">Vendors</a>
+                    <nav id="desktop-nav" class="hidden md:flex items-center space-x-8">
+                        <a href="index.html" class="text-gray-600 hover:text-green-600 transition">Home</a>
+                        <a href="products.html" class="text-gray-600 hover:text-green-600 transition">Products</a>
+                        <a href="vendors.html" class="text-gray-600 hover:text-green-600 transition">Vendors</a>
                     </nav>
                 </div>
                 
@@ -60,11 +60,23 @@
                         <a href="register.html" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">Register</a>
                     </div>
                     
-                    <button class="md:hidden text-gray-600 hover:text-green-600">
+                    <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-green-600 focus:outline-none">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
                 </div>
             </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <nav class="flex flex-col space-y-2 px-4 py-4">
+                <a href="index.html" class="text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition">Home</a>
+                <a href="products.html" class="text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition">Products</a>
+                <a href="vendors.html" class="text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition">Vendors</a>
+                <hr class="my-2">
+                <a href="login.html" class="text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition">Login</a>
+                <a href="register.html" class="text-green-500 hover:bg-green-50 px-4 py-2 rounded transition font-semibold">Register</a>
+            </nav>
         </div>
     </header>
 
@@ -185,5 +197,19 @@
     <script src="app.js"></script>
     <script src="product.js"></script>
     <script src="search.js"></script>
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when a link is clicked
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('mobile-menu').classList.add('hidden');
+            });
+        });
+    </script>
 </body>
 </html>
