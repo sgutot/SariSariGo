@@ -285,12 +285,15 @@ function placeOrder(e) {
     }
 
     // Validate stock
-    for (const item of cartItems) {
+    for (const item of cartItemsForOrder) {
         if (item.quantity > item.product.stock) {
             Utils.showNotification(`Not enough stock for ${item.product.name}. Only ${item.product.stock} available.`, 'error');
             return;
         }
     }
+
+    // Calculate subtotal
+    const subtotal = cartItemsForOrder.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
 
     // Create order
     const orderData = {
