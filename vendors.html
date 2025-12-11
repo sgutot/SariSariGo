@@ -53,14 +53,39 @@
             </div>
         </div>
 
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
-            <nav class="flex flex-col space-y-2 px-4 py-4">
-                <a href="index.html" class="text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition">Home</a>
-                <a href="products.html" class="text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition">Products</a>
-                <a href="vendors.html" class="text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition">Vendors</a>
-            </nav>
     </header>
+
+    <div id="mobile-menu-overlay" class="fixed inset-0 bg-black bg-opacity-40 z-40 hidden md:hidden"></div>
+    <aside id="mobile-menu-panel" class="fixed right-0 top-0 h-full w-72 max-w-[85%] bg-white z-50 transform translate-x-full transition-transform duration-300 md:hidden shadow-lg">
+        <div class="flex items-center justify-between p-4 border-b">
+            <div class="flex items-center space-x-3">
+                <img src="products/logo.png" alt="logo" class="h-8 w-auto object-contain" onerror="this.style.display='none'">
+                <span class="font-bold text-green-600">SariSariGo</span>
+            </div>
+            <button id="mobile-menu-close" class="text-gray-600 hover:text-green-700 focus:outline-none">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <nav class="p-4 space-y-3" aria-label="Mobile Navigation">
+            <a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-green-50">
+                <i class="fas fa-home w-5 text-gray-600"></i><span class="text-gray-700">Home</span>
+            </a>
+            <a href="products.html" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-green-50">
+                <i class="fas fa-list w-5 text-gray-600"></i><span class="text-gray-700">Products</span>
+            </a>
+            <a href="vendors.html" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-green-50">
+                <i class="fas fa-store w-5 text-gray-600"></i><span class="text-gray-700">Vendors</span>
+            </a>
+            <div class="border-t my-2"></div>
+            <a href="cart.html" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-green-50">
+                <i class="fas fa-shopping-cart w-5 text-gray-600"></i>
+                <span class="text-gray-700">Cart</span>
+                <span id="mobile-cart-count" class="ml-auto bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center hidden">0</span>
+            </a>
+            <a href="login.html" class="block px-3 py-2 rounded hover:bg-green-50 text-gray-700">Login</a>
+            <a href="register.html" class="block px-3 py-2 rounded bg-green-50 text-green-700 font-semibold">Register</a>
+        </nav>
+    </aside>
 
     <main class="container mx-auto px-4 py-8">
         <div class="mb-8">
