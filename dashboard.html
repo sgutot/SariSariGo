@@ -435,6 +435,22 @@
 
     <script src="app.js"></script>
     <script>
+        // Mobile menu toggle (defensive)
+        (function() {
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            if (btn && menu) {
+                btn.addEventListener('click', function() {
+                    menu.classList.toggle('hidden');
+                });
+                menu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', function() {
+                        menu.classList.add('hidden');
+                    });
+                });
+            }
+        })();
+
         // Enhanced Dashboard functionality
         document.addEventListener('DOMContentLoaded', function() {
             // Reload current user from localStorage to get fresh data
