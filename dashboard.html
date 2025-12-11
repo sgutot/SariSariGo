@@ -65,6 +65,21 @@
                         <a href="vendors.html" class="text-gray-600 hover:text-green-600 transition">Vendors</a>
                     </nav>
                 </div>
+
+                <!-- Search Bar -->
+                <div class="flex-1 max-w-lg mx-4">
+                    <div class="relative">
+                        <input id="search-input" 
+                               type="search" 
+                               placeholder="Search for products..." 
+                               autocomplete="off"
+                               class="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-full focus:ring-green-500 focus:border-green-500">
+                        <button id="search-btn" class="absolute inset-y-0 right-0 flex items-center pr-3" type="button">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </button>
+                    </div>
+                </div>
+
                 <div class="flex items-center space-x-4">
                     <a href="cart.html" class="relative text-gray-600 hover:text-green-600 transition">
                         <i class="fas fa-shopping-cart text-xl"></i>
@@ -75,6 +90,34 @@
                     </div>
                 </div>
             </div>
+             <!-- User Actions -->
+                <div class="flex items-center space-x-4">
+                    <a href="cart.html" class="relative text-gray-600 hover:text-green-600 transition">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                    </a>
+                    
+                    <div class="hidden md:flex items-center space-x-4" id="auth-links">
+                        <a href="login.html" class="text-gray-600 hover:text-green-600 transition">Login</a>
+                        <a href="register.html" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">Register</a>
+                    </div>
+                    
+                    <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-green-600 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <nav class="flex flex-col space-y-2 px-4 py-4">
+                <a href="index.html" class="text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition">Home</a>
+                <a href="products.html" class="text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition">Products</a>
+                <a href="vendors.html" class="text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition">Vendors</a>
+                <a href="dashboard.html" class="text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition">Dashboard</a>
+                <hr class="my-2">
+                <a href="login.html" class="text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition">Login</a>
+                <a href="register.html" class="text-green-500 hover:bg-green-50 px-4 py-2 rounded transition font-semibold">Register</a>
+            </nav>
         </div>
     </header>
 
