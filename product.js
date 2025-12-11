@@ -93,9 +93,9 @@ function renderVendorHeader(vendor) {
                 <div class="text-right">
                     <div class="bg-white bg-opacity-20 rounded-2xl p-4 backdrop-blur-sm">
                         <div class="text-yellow-300 text-2xl mb-1">
-                            ${'★'.repeat(Math.floor(vendor.rating || 0))}${(vendor.rating || 0) % 1 >= 0.5 ? '½' : ''}
+                            ${(typeof Utils !== 'undefined' && typeof Utils.generateStarRating === 'function') ? Utils.generateStarRating(vendor.rating) : ('★'.repeat(Math.floor(vendor.rating || 0)) + ((vendor.rating || 0) % 1 >= 0.5 ? '½' : ''))}
                         </div>
-                        <div class="text-white font-semibold">${vendor.rating || '0'}/5.0</div>
+                        <div class="text-white font-semibold">${(Number(vendor.rating) || 0).toFixed(1)}/5.0</div>
                         <div class="text-purple-100 text-sm mt-1">Vendor Rating</div>
                     </div>
                 </div>

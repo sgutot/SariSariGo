@@ -1,4 +1,9 @@
 /* Custom Styles for SariSariGo */
+.root, :root {
+    --primary: #10B981; /* Green used across the site */
+    --primary-dark: #059669;
+    --accent: #30c685;
+}
 .hero-gradient {
     background: linear-gradient(135deg, #10B981 0%, #059669 100%);
 }
@@ -21,12 +26,12 @@
 }
 
 .filter-nav-active {
-    background-color: #10B981;
+    background-color: var(--primary);
     color: white;
 }
 
 .dashboard-link-active {
-    background-color: #10B981;
+    background-color: var(--primary);
     color: white;
 }
 

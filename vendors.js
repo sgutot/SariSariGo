@@ -82,14 +82,8 @@ function createVendorCard(vendor, productCount) {
     const vendorRating = vendor.rating || 0;
     const vendorLogo = vendor.storeLogo || 'https://via.placeholder.com/100x100?text=Store';
     
-    // Calculate star rating display
-    const fullStars = Math.floor(vendorRating);
-    const hasHalfStar = vendorRating % 1 >= 0.5;
-    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-    
-    const stars = '★'.repeat(fullStars) + 
-                 (hasHalfStar ? '½' : '') + 
-                 '☆'.repeat(emptyStars);
+    // Use centralized star renderer for consistent icons
+    const stars = (typeof Utils !== 'undefined' && typeof Utils.generateStarRating === 'function') ? Utils.generateStarRating(vendorRating) : ('★'.repeat(Math.floor(vendorRating)) + (vendorRating % 1 >= 0.5 ? '½' : '') + '☆'.repeat(5 - Math.floor(vendorRating) - (vendorRating % 1 >= 0.5 ? 1 : 0)));
     
     // Determine whether the current user is a vendor
     const isVendor = (typeof AppState !== 'undefined' && AppState.currentUser && AppState.currentUser.role === 'vendor');
@@ -122,7 +116,7 @@ function createVendorCard(vendor, productCount) {
             <p class="text-gray-600 mt-2 line-clamp-2 h-12 overflow-hidden">${vendorDescription}</p>
             <div class="mt-4 flex items-center">
                 <span class="text-yellow-500 text-lg">${stars}</span>
-                <span class="text-gray-500 ml-2">${vendorRating.toFixed(1)}/5.0</span>
+                <span class="text-gray-500 ml-2">${(Number(vendorRating) || 0).toFixed(1)}/5.0</span>
             </div>
             <p class="text-sm text-gray-500 mt-2">${productCount} product${productCount !== 1 ? 's' : ''} available</p>
 

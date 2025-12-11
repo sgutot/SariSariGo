@@ -132,6 +132,18 @@ const Utils = {
         }
     },
 
+    // Render star rating HTML using Font Awesome icons (falls back to unicode if FA missing)
+    generateStarRating(rating) {
+        const r = Number(rating) || 0;
+        const fullStars = Math.floor(r);
+        const hasHalfStar = (r % 1) >= 0.5;
+        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+        const full = '<i class="fas fa-star text-yellow-400"></i>';
+        const half = '<i class="fas fa-star-half-alt text-yellow-400"></i>';
+        const empty = '<i class="far fa-star text-gray-300"></i>';
+        return full.repeat(fullStars) + (hasHalfStar ? half : '') + empty.repeat(emptyStars);
+    },
+
     loadDB() {
         try {
             const raw = localStorage.getItem('sariSariGoDB');
