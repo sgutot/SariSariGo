@@ -133,10 +133,6 @@ const Utils = {
                     // Find nav container inside mobile menu
                     const nav = mobileMenu.querySelector('nav') || mobileMenu;
 
-                    // Remove any previous mobile logout button to avoid duplicates
-                    const prevMobileLogout = nav.querySelector('#mobile-logout-btn');
-                    if (prevMobileLogout) prevMobileLogout.remove();
-
                     // Create mobile logout/button markup depending on role
                     const logoutBtn = document.createElement('button');
                     logoutBtn.id = 'mobile-logout-btn';
