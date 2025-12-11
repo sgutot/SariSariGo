@@ -76,11 +76,26 @@
 
         <!-- Category Filters -->
         <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
-            <div class="flex flex-wrap gap-2">
+            <!-- Desktop category chips -->
+            <div class="hidden md:flex flex-wrap gap-2" id="category-chips">
                 <button class="category-filter-btn filter-nav-active px-4 py-2 rounded-lg bg-green-500 text-white" data-category="All">
                     All Categories
                 </button>
                 <!-- Categories will be loaded by JavaScript -->
+            </div>
+
+            <!-- Mobile dropdown for categories -->
+            <div class="md:hidden" id="mobile-category-wrapper">
+                <div class="relative">
+                    <button id="mobile-categories-toggle" class="w-full bg-white border border-gray-200 rounded-lg px-4 py-2 text-left flex items-center justify-between">
+                        <span id="mobile-categories-selected">All Categories</span>
+                        <i id="mobile-categories-chevron" class="fas fa-chevron-down text-gray-500"></i>
+                    </button>
+                    <div id="mobile-categories-list" class="hidden absolute left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-60 overflow-auto">
+                        <!-- Mobile category items inserted here -->
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-green-50 mobile-category-item" data-category="All">All Categories</a>
+                    </div>
+                </div>
             </div>
         </div>
 

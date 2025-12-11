@@ -166,60 +166,114 @@ function getCategoryIcon(category) {
 }
 
 function loadCategories() {
-    const filterContainer = document.querySelector('.flex-wrap.gap-2');
-    if (!filterContainer) return;
+    // Desktop chips container
+    const filterContainer = document.getElementById('category-chips');
+    // Mobile list container
+    const mobileList = document.getElementById('mobile-categories-list');
+    const mobileSelected = document.getElementById('mobile-categories-selected');
+    if (!filterContainer && !mobileList) return;
 
     const categories = DB.categories;
-    const categoryButtons = categories.map(category => 
-        `<button class="category-filter-btn px-6 py-3 rounded-full bg-white text-gray-700 hover:bg-green-500 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md border border-gray-200" data-category="${category}">
-            <i class="${getCategoryIcon(category).match(/fa-[a-z-]+/)[0]} mr-2"></i>
-            ${category}
-        </button>`
-    ).join('');
-    
-    const allButton = filterContainer.querySelector('[data-category="All"]');
-    if (allButton) {
-        allButton.insertAdjacentHTML('afterend', categoryButtons);
+
+    // Build desktop buttons
+    if (filterContainer) {
+        const categoryButtons = categories.map(category => 
+            `<button class="category-filter-btn px-6 py-3 rounded-full bg-white text-gray-700 hover:bg-green-500 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md border border-gray-200" data-category="${category}">
+                <i class="${getCategoryIcon(category).match(/fa-[a-z-]+/)[0]} mr-2"></i>
+                ${category}
+            </button>`
+        ).join('');
+
+        const allButton = filterContainer.querySelector('[data-category="All"]');
+        if (allButton) {
+            allButton.insertAdjacentHTML('afterend', categoryButtons);
+        }
     }
 
-    // Add event listeners to category buttons
+    // Build mobile list items
+    if (mobileList) {
+        // Rebuild mobile list: start with All, then categories
+        mobileList.innerHTML = '';
+        const allEl = document.createElement('a');
+        allEl.href = '#';
+        allEl.className = 'block px-4 py-2 text-gray-700 hover:bg-green-50 mobile-category-item';
+        allEl.dataset.category = 'All';
+        allEl.textContent = 'All Categories';
+        mobileList.appendChild(allEl);
+
+        categories.forEach(category => {
+            const el = document.createElement('a');
+            el.href = '#';
+            el.className = 'block px-4 py-2 text-gray-700 hover:bg-green-50 mobile-category-item';
+            el.dataset.category = category;
+            el.textContent = category;
+            mobileList.appendChild(el);
+        });
+    }
+
+    // Shared handler to select category (applies to desktop and mobile)
+    function selectCategory(category) {
+        // Update desktop active state
+        document.querySelectorAll('.category-filter-btn').forEach(btn => {
+            btn.classList.remove('filter-nav-active', 'bg-green-500', 'text-white', 'shadow-md');
+            btn.classList.add('bg-white', 'text-gray-700', 'shadow-sm');
+        });
+        const desktopBtn = document.querySelector(`.category-filter-btn[data-category="${category}"]`);
+        if (desktopBtn) {
+            desktopBtn.classList.add('filter-nav-active', 'bg-green-500', 'text-white', 'shadow-md');
+            desktopBtn.classList.remove('bg-white', 'text-gray-700', 'shadow-sm');
+        }
+
+        // Update mobile selected label
+        if (mobileSelected) mobileSelected.textContent = category === 'All' ? 'All Categories' : category;
+
+        // Update URL and load products
+        const url = new URL(window.location);
+        if (category === 'All') {
+            url.searchParams.delete('category');
+        } else {
+            url.searchParams.set('category', category);
+        }
+        window.history.pushState({}, '', url);
+
+        loadAllProducts(category);
+    }
+
+    // Add event listeners to desktop buttons
     document.querySelectorAll('.category-filter-btn').forEach(button => {
         button.addEventListener('click', function() {
-            // Update active state
-            document.querySelectorAll('.category-filter-btn').forEach(btn => {
-                btn.classList.remove('filter-nav-active', 'bg-green-500', 'text-white', 'shadow-md');
-                btn.classList.add('bg-white', 'text-gray-700', 'shadow-sm');
-            });
-            this.classList.add('filter-nav-active', 'bg-green-500', 'text-white', 'shadow-md');
-            this.classList.remove('bg-white', 'text-gray-700', 'shadow-sm');
-            
-            // Load products with selected category
-            const category = this.dataset.category;
-            const url = new URL(window.location);
-            if (category === 'All') {
-                url.searchParams.delete('category');
-            } else {
-                url.searchParams.set('category', category);
-            }
-            window.history.pushState({}, '', url);
-            
-            loadAllProducts(category);
+            selectCategory(this.dataset.category);
         });
     });
+
+    // Mobile toggle behavior
+    const mobileToggle = document.getElementById('mobile-categories-toggle');
+    const mobileChevron = document.getElementById('mobile-categories-chevron');
+    if (mobileToggle && mobileList) {
+        mobileToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            mobileList.classList.toggle('hidden');
+            mobileChevron.classList.toggle('rotate-180');
+        });
+
+        // Click on mobile category items
+        mobileList.querySelectorAll('.mobile-category-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const category = this.dataset.category;
+                selectCategory(category);
+                // close dropdown
+                mobileList.classList.add('hidden');
+                if (mobileChevron) mobileChevron.classList.remove('rotate-180');
+            });
+        });
+    }
 
     // Set initial active category from URL
     const urlParams = new URLSearchParams(window.location.search);
     const categoryParam = urlParams.get('category');
     if (categoryParam) {
-        const categoryButton = document.querySelector(`[data-category="${categoryParam}"]`);
-        if (categoryButton) {
-            document.querySelectorAll('.category-filter-btn').forEach(btn => {
-                btn.classList.remove('filter-nav-active', 'bg-green-500', 'text-white', 'shadow-md');
-                btn.classList.add('bg-white', 'text-gray-700', 'shadow-sm');
-            });
-            categoryButton.classList.add('filter-nav-active', 'bg-green-500', 'text-white', 'shadow-md');
-            categoryButton.classList.remove('bg-white', 'text-gray-700', 'shadow-sm');
-        }
+        selectCategory(categoryParam);
     }
 }
 
