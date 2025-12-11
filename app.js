@@ -177,20 +177,20 @@ const Utils = {
                     const mobileLogout = nav.querySelector('#mobile-logout-btn');
                     if (mobileLogout) mobileLogout.remove();
                     // Add login/register if not present
-                    if (!nav.querySelector('a[href="login.html"]')) {
-                        const loginLink = document.createElement('a');
-                        loginLink.href = 'login.html';
-                        loginLink.className = 'text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition';
-                        loginLink.textContent = 'Login';
-                        nav.appendChild(loginLink);
-                    }
-                    if (!nav.querySelector('a[href="register.html"]')) {
-                        const regLink = document.createElement('a');
-                        regLink.href = 'register.html';
-                        regLink.className = 'text-green-500 hover:bg-green-50 px-4 py-2 rounded transition font-semibold';
-                        regLink.textContent = 'Register';
-                        nav.appendChild(regLink);
-                    }
+                    // if (!nav.querySelector('a[href="login.html"]')) {
+                    //     const loginLink = document.createElement('a');
+                    //     loginLink.href = 'login.html';
+                    //     loginLink.className = 'text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition';
+                    //     loginLink.textContent = 'Login';
+                    //     nav.appendChild(loginLink);
+                    // }
+                    // if (!nav.querySelector('a[href="register.html"]')) {
+                    //     const regLink = document.createElement('a');
+                    //     regLink.href = 'register.html';
+                    //     regLink.className = 'text-green-500 hover:bg-green-50 px-4 py-2 rounded transition font-semibold';
+                    //     regLink.textContent = 'Register';
+                    //     nav.appendChild(regLink);
+                    // } 
                 }
             } catch (e) {
                 console.warn('Could not ensure mobile menu auth links when logged out', e);
