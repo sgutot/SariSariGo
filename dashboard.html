@@ -50,22 +50,27 @@
     </style>
 </head>
 <body class="bg-gray-50 font-inter">
-    <!-- Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
+     <!-- Header Section -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <div class="flex items-center space-x-8">
+                
+                <!-- Logo and Navigation -->
+                <div class="flex items-center space-x-4 md:space-x-8">
                     <a href="index.html" class="flex items-center">
-                        <img src="products/logo.png" alt="SariSariGo" class="h-8 w-auto mr-3 object-contain" onerror="this.style.display='none'">
+                        <img src="products/logo.png" alt="SariSariGo" 
+                             class="h-8 w-auto mr-3 object-contain" 
+                             onerror="this.style.display='none'">
                         <span class="text-2xl font-bold text-green-600">SariSariGo</span>
                     </a>
-                    <nav class="hidden md:flex items-center space-x-8" id="main-nav">
+                    
+                    <nav id="desktop-nav" class="hidden md:flex items-center space-x-8">
                         <a href="index.html" class="text-gray-600 hover:text-green-600 transition">Home</a>
                         <a href="products.html" class="text-gray-600 hover:text-green-600 transition">Products</a>
                         <a href="vendors.html" class="text-gray-600 hover:text-green-600 transition">Vendors</a>
                     </nav>
                 </div>
-
+                
                 <!-- Search Bar -->
                 <div class="flex-1 max-w-lg mx-4">
                     <div class="relative">
@@ -79,18 +84,8 @@
                         </button>
                     </div>
                 </div>
-
-                <div class="flex items-center space-x-4">
-                    <a href="cart.html" class="relative text-gray-600 hover:text-green-600 transition">
-                        <i class="fas fa-shopping-cart text-xl"></i>
-                        <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
-                    </a>
-                    <div class="hidden md:flex items-center space-x-4" id="auth-links">
-                        <!-- Auth links will be populated by JavaScript -->
-                    </div>
-                </div>
-            </div>
-             <!-- User Actions -->
+                
+                <!-- User Actions -->
                 <div class="flex items-center space-x-4">
                     <a href="cart.html" class="relative text-gray-600 hover:text-green-600 transition">
                         <i class="fas fa-shopping-cart text-xl"></i>
@@ -107,6 +102,8 @@
                     </button>
                 </div>
             </div>
+        </div>
+
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
             <nav class="flex flex-col space-y-2 px-4 py-4">
