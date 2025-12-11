@@ -147,10 +147,9 @@ const Utils = {
                     logoutBtn.className = 'text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition w-full text-left';
                     logoutBtn.textContent = 'Logout';
 
-                    // If buyer, add Dashboard link above logout
+                    // If buyer, add Dashboard link above logout — only if no Dashboard exists anywhere on the page
                     if (AppState.currentUser.role !== 'vendor') {
-                        // Avoid duplicating dashboard link if already present
-                        if (!nav.querySelector('a[href="dashboard.html"]')) {
+                        if (!document.querySelector('a[href="dashboard.html"]')) {
                             const dashLink = document.createElement('a');
                             dashLink.href = 'dashboard.html';
                             dashLink.className = 'text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition';
