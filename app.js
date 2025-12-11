@@ -132,29 +132,33 @@ const Utils = {
                 if (mobileMenu) {
                     // Find nav container inside mobile menu
                     const nav = mobileMenu.querySelector('nav') || mobileMenu;
+                        // Clean up any existing auth links in mobile nav to avoid duplicates
+                        nav.querySelectorAll('a[href="login.html"], a[href="register.html"]').forEach(el => el.remove());
+                        const prevMobileLogout = nav.querySelector('#mobile-logout-btn');
+                        if (prevMobileLogout) prevMobileLogout.remove();
 
-                    // Create mobile logout/button markup depending on role
-                    const logoutBtn = document.createElement('button');
-                    logoutBtn.id = 'mobile-logout-btn';
-                    logoutBtn.className = 'text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition w-full text-left';
-                    logoutBtn.textContent = 'Logout';
+                        // Create mobile logout/button markup depending on role
+                        const logoutBtn = document.createElement('button');
+                        logoutBtn.id = 'mobile-logout-btn';
+                        logoutBtn.className = 'text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition w-full text-left';
+                        logoutBtn.textContent = 'Logout';
 
-                    // If buyer, add Dashboard link above logout — only if no Dashboard exists anywhere on the page
-                    if (AppState.currentUser.role !== 'vendor') {
-                        if (!document.querySelector('a[href="dashboard.html"]')) {
-                            const dashLink = document.createElement('a');
-                            dashLink.href = 'dashboard.html';
-                            dashLink.className = 'text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition';
-                            dashLink.textContent = 'Dashboard';
-                            nav.appendChild(dashLink);
+                        // If buyer, add Dashboard link above logout — only if no Dashboard exists anywhere on the page
+                        if (AppState.currentUser.role !== 'vendor') {
+                            if (!document.querySelector('a[href="dashboard.html"]')) {
+                                const dashLink = document.createElement('a');
+                                dashLink.href = 'dashboard.html';
+                                dashLink.className = 'text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition';
+                                dashLink.textContent = 'Dashboard';
+                                nav.appendChild(dashLink);
+                            }
                         }
-                    }
 
-                    // Append logout button
-                    nav.appendChild(logoutBtn);
+                        // Append logout button
+                        nav.appendChild(logoutBtn);
 
-                    // Bind logout
-                    logoutBtn.addEventListener('click', () => Auth.logout());
+                        // Bind logout
+                        logoutBtn.addEventListener('click', () => Auth.logout());
                 }
             } catch (e) {
                 console.warn('Could not update mobile menu auth links', e);
