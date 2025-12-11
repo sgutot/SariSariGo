@@ -127,15 +127,11 @@ const Utils = {
             const desktopLogout = document.getElementById('logout-btn');
             if (desktopLogout) desktopLogout.addEventListener('click', () => Auth.logout());
 
-            // Also update mobile menu links if present
             try {
                 const mobileMenu = document.getElementById('mobile-menu');
                 if (mobileMenu) {
                     // Find nav container inside mobile menu
                     const nav = mobileMenu.querySelector('nav') || mobileMenu;
-
-                    // Remove existing login/register links
-                    nav.querySelectorAll('a[href="login.html"], a[href="register.html"]').forEach(el => el.remove());
 
                     // Remove any previous mobile logout button to avoid duplicates
                     const prevMobileLogout = nav.querySelector('#mobile-logout-btn');
