@@ -50,53 +50,38 @@
     </style>
 </head>
 <body class="bg-gray-50 font-inter">
-     <!-- Header Section -->
+    <!-- Header -->
     <header class="bg-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                
-                <!-- Logo and Navigation -->
                 <div class="flex items-center space-x-4 md:space-x-8">
                     <a href="index.html" class="flex items-center">
-                        <img src="products/logo.png" alt="SariSariGo" 
-                             class="h-8 w-auto mr-3 object-contain" 
-                             onerror="this.style.display='none'">
+                        <img src="products/logo.png" alt="SariSariGo" class="h-8 w-auto mr-3 object-contain" onerror="this.style.display='none'">
                         <span class="text-2xl font-bold text-green-600">SariSariGo</span>
                     </a>
-                    
                     <nav id="desktop-nav" class="hidden md:flex items-center space-x-8">
                         <a href="index.html" class="text-gray-600 hover:text-green-600 transition">Home</a>
                         <a href="products.html" class="text-gray-600 hover:text-green-600 transition">Products</a>
                         <a href="vendors.html" class="text-gray-600 hover:text-green-600 transition">Vendors</a>
                     </nav>
                 </div>
-                
-                <!-- Search Bar -->
                 <div class="flex-1 max-w-lg mx-4">
                     <div class="relative">
-                        <input id="search-input" 
-                               type="search" 
-                               placeholder="Search for products..." 
-                               autocomplete="off"
+                        <input id="search-input" type="search" placeholder="Search for products..." autocomplete="off"
                                class="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-full focus:ring-green-500 focus:border-green-500">
                         <button id="search-btn" class="absolute inset-y-0 right-0 flex items-center pr-3" type="button">
                             <i class="fas fa-search text-gray-400"></i>
                         </button>
                     </div>
                 </div>
-                
-                <!-- User Actions -->
                 <div class="flex items-center space-x-4">
                     <a href="cart.html" class="relative text-gray-600 hover:text-green-600 transition">
                         <i class="fas fa-shopping-cart text-xl"></i>
                         <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
                     </a>
-                    
                     <div class="hidden md:flex items-center space-x-4" id="auth-links">
-                        <a href="login.html" class="text-gray-600 hover:text-green-600 transition">Login</a>
-                        <a href="register.html" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">Register</a>
+                        <!-- Auth links will be populated by JavaScript -->
                     </div>
-                    
                     <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-green-600 focus:outline-none">
                         <i class="fas fa-bars text-xl"></i>
                     </button>

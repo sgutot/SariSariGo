@@ -246,26 +246,32 @@ function loadCategories() {
         });
     });
 
-    // Mobile toggle behavior
+    // Mobile toggle behavior (robust: ARIA + event delegation)
     const mobileToggle = document.getElementById('mobile-categories-toggle');
     const mobileChevron = document.getElementById('mobile-categories-chevron');
     if (mobileToggle && mobileList) {
+        // ensure ARIA default
+        mobileToggle.setAttribute('aria-haspopup', 'listbox');
+        mobileToggle.setAttribute('aria-expanded', mobileList.classList.contains('hidden') ? 'false' : 'true');
+
         mobileToggle.addEventListener('click', (e) => {
             e.preventDefault();
-            mobileList.classList.toggle('hidden');
-            mobileChevron.classList.toggle('rotate-180');
+            const nowHidden = mobileList.classList.toggle('hidden');
+            mobileToggle.setAttribute('aria-expanded', nowHidden ? 'false' : 'true');
+            if (mobileChevron) mobileChevron.classList.toggle('rotate-180');
         });
 
-        // Click on mobile category items
-        mobileList.querySelectorAll('.mobile-category-item').forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                const category = this.dataset.category;
-                selectCategory(category);
-                // close dropdown
-                mobileList.classList.add('hidden');
-                if (mobileChevron) mobileChevron.classList.remove('rotate-180');
-            });
+        // Use event delegation for clicks on category items so dynamically-added items are handled
+        mobileList.addEventListener('click', function(e) {
+            const item = e.target.closest('.mobile-category-item');
+            if (!item) return;
+            e.preventDefault();
+            const category = item.dataset.category;
+            selectCategory(category);
+            // close dropdown
+            mobileList.classList.add('hidden');
+            if (mobileChevron) mobileChevron.classList.remove('rotate-180');
+            mobileToggle.setAttribute('aria-expanded', 'false');
         });
     }
 
