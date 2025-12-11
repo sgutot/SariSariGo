@@ -123,12 +123,83 @@ const Utils = {
                     <button id="logout-btn" class="text-gray-600 hover:text-green-600 transition">Logout</button>
                 `;
             }
-            document.getElementById('logout-btn').addEventListener('click', () => Auth.logout());
+            // Bind desktop logout button
+            const desktopLogout = document.getElementById('logout-btn');
+            if (desktopLogout) desktopLogout.addEventListener('click', () => Auth.logout());
+
+            // Also update mobile menu links if present
+            try {
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu) {
+                    // Find nav container inside mobile menu
+                    const nav = mobileMenu.querySelector('nav') || mobileMenu;
+
+                    // Remove existing login/register links
+                    nav.querySelectorAll('a[href="login.html"], a[href="register.html"]').forEach(el => el.remove());
+
+                    // Remove any previous mobile logout button to avoid duplicates
+                    const prevMobileLogout = nav.querySelector('#mobile-logout-btn');
+                    if (prevMobileLogout) prevMobileLogout.remove();
+
+                    // Create mobile logout/button markup depending on role
+                    const logoutBtn = document.createElement('button');
+                    logoutBtn.id = 'mobile-logout-btn';
+                    logoutBtn.className = 'text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition w-full text-left';
+                    logoutBtn.textContent = 'Logout';
+
+                    // If buyer, add Dashboard link above logout
+                    if (AppState.currentUser.role !== 'vendor') {
+                        // Avoid duplicating dashboard link if already present
+                        if (!nav.querySelector('a[href="dashboard.html"]')) {
+                            const dashLink = document.createElement('a');
+                            dashLink.href = 'dashboard.html';
+                            dashLink.className = 'text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition';
+                            dashLink.textContent = 'Dashboard';
+                            nav.appendChild(dashLink);
+                        }
+                    }
+
+                    // Append logout button
+                    nav.appendChild(logoutBtn);
+
+                    // Bind logout
+                    logoutBtn.addEventListener('click', () => Auth.logout());
+                }
+            } catch (e) {
+                console.warn('Could not update mobile menu auth links', e);
+            }
         } else {
             authLinks.innerHTML = `
                 <a href="login.html" class="text-gray-600 hover:text-green-600 transition">Login</a>
                 <a href="register.html" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">Register</a>
             `;
+            // Ensure mobile menu shows login/register when logged out
+            try {
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu) {
+                    const nav = mobileMenu.querySelector('nav') || mobileMenu;
+                    // Remove any mobile logout button
+                    const mobileLogout = nav.querySelector('#mobile-logout-btn');
+                    if (mobileLogout) mobileLogout.remove();
+                    // Add login/register if not present
+                    if (!nav.querySelector('a[href="login.html"]')) {
+                        const loginLink = document.createElement('a');
+                        loginLink.href = 'login.html';
+                        loginLink.className = 'text-gray-600 hover:text-green-600 hover:bg-green-50 px-4 py-2 rounded transition';
+                        loginLink.textContent = 'Login';
+                        nav.appendChild(loginLink);
+                    }
+                    if (!nav.querySelector('a[href="register.html"]')) {
+                        const regLink = document.createElement('a');
+                        regLink.href = 'register.html';
+                        regLink.className = 'text-green-500 hover:bg-green-50 px-4 py-2 rounded transition font-semibold';
+                        regLink.textContent = 'Register';
+                        nav.appendChild(regLink);
+                    }
+                }
+            } catch (e) {
+                console.warn('Could not ensure mobile menu auth links when logged out', e);
+            }
         }
     },
 

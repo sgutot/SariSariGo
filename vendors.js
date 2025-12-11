@@ -189,6 +189,3 @@ function checkDB() {
         statusEl.textContent = 'Error checking DB (see console)';
     }
 }
-
-// Remove the debug function and authentication check from vendors.js
-// since we want all users to be able to browse vendors
